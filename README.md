@@ -78,6 +78,27 @@ python3 restore_db.py restore-sql <sql_file>  # Restore from SQL
 
 ---
 
+## 🗄️ Database Options
+
+### SQLite3 (Default)
+**File:** `films.db`
+**Usage:** `python3 import_tool.py`
+
+### PostgreSQL (Recommended for Production)
+**File:** See `POSTGRES_SETUP.md` for setup
+**Usage:** `python3 import_tool_postgres.py`
+
+**Setup Steps:**
+1. Install PostgreSQL
+2. Create database and user
+3. Edit `config.py` with credentials
+4. Install psycopg2: `pip install psycopg2-binary`
+5. Run: `python3 import_tool_postgres.py`
+
+See `POSTGRES_SETUP.md` for detailed instructions.
+
+---
+
 ## 🗄️ Database Schema
 
 ### Films Table
