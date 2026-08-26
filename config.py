@@ -15,8 +15,8 @@ DOWNLOAD_DIR = BASE_DIR / 'videos'
 DATABASE_CONFIG = {
     'host': 'localhost',           # PostgreSQL host
     'port': 5432,                  # PostgreSQL port
-    'user': 'postgres',            # PostgreSQL user
-    'password': 'your_password',   # CHANGE THIS! PostgreSQL password
+    'user': 'video_user',          # PostgreSQL user
+    'password': 'postgres123',     # PostgreSQL password
     'database': 'films_db',        # Database name
 }
 

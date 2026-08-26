@@ -6,6 +6,8 @@ Download and import videos from JSON config files
 import json
 import time
 import logging
+import glob
+import shutil
 from pathlib import Path
 from datetime import datetime
 import urllib.request
@@ -221,7 +223,7 @@ class VideoDownloader:
         return None
 
     def download_episode(self, url, film_id, ep_number, source):
-        """Download episode video"""
+        """Download episode video (HLS M3U8 + segments)"""
         url_path = urlparse(url).path.strip('/')
         parts = url_path.split('/')
         output_dir = self.download_dir / source / film_id / 'ep' / str(ep_number)
@@ -230,22 +232,53 @@ class VideoDownloader:
         if len(parts) >= 2:
             subdir = output_dir / parts[-2]
             subdir.mkdir(parents=True, exist_ok=True)
-            output_path = subdir / parts[-1]
+            m3u8_path = subdir / parts[-1]
         else:
-            output_path = output_dir / 'video.m3u8'
+            subdir = output_dir
+            m3u8_path = output_dir / 'video.m3u8'
 
-        if self.download_file(url, output_path):
-            return str(output_path)
-        return None
+        # Download M3U8 playlist
+        if not self.download_file(url, m3u8_path):
+            return None
+
+        # Parse and download all video segments
+        try:
+            with open(m3u8_path, 'r') as f:
+                m3u8_content = f.read()
+
+            # Extract segment URLs (lines starting with /)
+            segments = [line.strip() for line in m3u8_content.split('\n')
+                       if line.strip().startswith('/')]
+
+            logger.info(f"Found {len(segments)} video segments in M3U8")
+
+            # Build base URL (domain only: https://v-a.idrama.video)
+            parsed = urlparse(url)
+            base_url = f"{parsed.scheme}://{parsed.netloc}"
+
+            # Download each segment
+            for segment_path in segments:
+                # Segment path is absolute from domain: /hash1/hash2.ts?ts=...&secret=...
+                segment_url = base_url + segment_path
+                # Extract filename from segment URL (remove query params)
+                segment_file = segment_path.split('/')[-1].split('?')[0]
+                segment_out = subdir / segment_file
+                self.download_file(segment_url, segment_out)
+        except Exception as e:
+            logger.warning(f"Error downloading segments: {e}")
+
+        return str(m3u8_path)
 
 class ImportProcessor:
     def __init__(self, db, downloader):
         self.db = db
         self.downloader = downloader
+        self.download_errors = []
 
     def process_json_file(self, json_file):
         """Process a single JSON file"""
         logger.info(f"Processing: {json_file}")
+        self.download_errors = []  # Reset errors for this file
 
         # Mark as processing
         processing_file = json_file.with_name(json_file.stem + '_processing.json')
@@ -296,6 +329,8 @@ class ImportProcessor:
         cover_path = None
         if cover_url:
             cover_path = self.downloader.download_cover(cover_url, film_id, source)
+            if not cover_path:
+                self.download_errors.append(f"Cover download failed: {cover_url}")
 
         # Prepare film data
         db_film_data = {
@@ -318,10 +353,11 @@ class ImportProcessor:
         film_pk = self.db.get_film_pk(film_id)
         if not film_pk:
             logger.error(f"Failed to get film pk for {film_id}")
-            return False
+            return self._handle_error(film_id, processing_file)
 
         # Download episodes
         logger.info(f"Downloading {len(episodes)} episodes for film {film_id}")
+        episodes_success = 0
 
         for episode in episodes:
             ep_number = episode.get('ep')
@@ -334,6 +370,16 @@ class ImportProcessor:
             video_path = self.downloader.download_episode(url, film_id, ep_number, source)
             if video_path:
                 self.db.insert_episode(film_pk, ep_number, video_path, url, url)
+                episodes_success += 1
+            else:
+                self.download_errors.append(f"Episode {ep_number} download failed: {url}")
+
+        # Check if all episodes downloaded successfully
+        if self.download_errors:
+            logger.error(f"❌ Download errors detected ({len(self.download_errors)} errors)")
+            for err in self.download_errors:
+                logger.error(f"   - {err}")
+            return self._handle_error(film_id, processing_file)
 
         # Rename to done
         done_file = processing_file.with_name(processing_file.stem.replace('_processing', '') + '_done.json')
@@ -342,14 +388,52 @@ class ImportProcessor:
             logger.info(f"Renamed to: {done_file}")
         except Exception as e:
             logger.error(f"Error renaming file: {e}")
+            return self._handle_error(film_id, processing_file)
+
+        logger.info(f"✅ Successfully processed: {json_file.name} ({episodes_success} episodes)")
+        return True
+
+    def _handle_error(self, film_id, processing_file):
+        """Handle processing error: rollback database and files"""
+        logger.error(f"🔄 Rolling back for film {film_id}...")
+
+        # Delete from database
+        try:
+            conn = self.db.get_connection()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM episodes WHERE film_id IN (SELECT id FROM films WHERE film_id = %s)", (film_id,))
+            cursor.execute("DELETE FROM films WHERE film_id = %s", (film_id,))
+            conn.commit()
+            conn.close()
+            logger.info(f"   ✓ Database records deleted")
+        except Exception as e:
+            logger.warning(f"   ⚠ Error deleting database records: {e}")
+
+        # Delete downloaded files
+        try:
+            video_dir = self.downloader.download_dir / '*' / film_id
+            import glob
+            for path in glob.glob(str(video_dir)):
+                if Path(path).is_dir():
+                    import shutil
+                    shutil.rmtree(path)
+                    logger.info(f"   ✓ Deleted: {path}")
+        except Exception as e:
+            logger.warning(f"   ⚠ Error deleting video files: {e}")
+
+        # Rename to error
+        error_file = processing_file.with_name(processing_file.stem.replace('_processing', '') + '_error.json')
+        try:
+            processing_file.rename(error_file)
+            logger.error(f"   ✓ Renamed to: {error_file.name}")
+        except Exception as e:
+            logger.error(f"   ⚠ Error renaming to error file: {e}")
             try:
-                processing_file.rename(json_file)
+                processing_file.rename(processing_file.with_name(processing_file.stem.replace('_processing', '') + '.json'))
             except:
                 pass
-            return False
 
-        logger.info(f"Successfully processed: {json_file.name}")
-        return True
+        return False
 
     def scan_and_process(self):
         """Scan for unprocessed JSON files"""

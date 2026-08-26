@@ -1,0 +1,42 @@
+# Downloaded Videos
+/videos/
+
+# JSON Data Files
+/idrama/*.json
+/idrama/*.json.bak
+
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+
+# Log Files
+*.log
+import_tool.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+
+# Virtual environments
+venv/
+env/
