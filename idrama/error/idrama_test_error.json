@@ -1,0 +1,27 @@
+{
+  "source": "idrama",
+  "drama": {
+    "id": "999999999999",
+    "name": "Test Error Handling",
+    "description": "Testing error rollback",
+    "cover": "https://p.idrama.video/group1/dc2b9863bf256e855a292e26ed06552f.jpg",
+    "total_episodes": 3,
+    "lang": "en",
+    "is_ai": false
+  },
+  "episodes": [
+    {
+      "ep": 1,
+      "url": "https://v-a.idrama.video/invalid/episode1.m3u8?invalid"
+    },
+    {
+      "ep": 2,
+      "url": "https://broken.invalid.com/ep2.m3u8"
+    },
+    {
+      "ep": 3,
+      "url": "https://not.real.url/ep3.m3u8"
+    }
+  ],
+  "scraped_at": "2026-08-26T18:00:00Z"
+}

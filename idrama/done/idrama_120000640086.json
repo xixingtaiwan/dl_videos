@@ -1,0 +1,364 @@
+{
+  "source": "idrama",
+  "scraped_at": "2026-08-26T11:08:43.063Z",
+  "drama": {
+    "id": "120000640086",
+    "name": "내 생에 만난 인연 , 까칠한 그녀",
+    "description": "여대생 린면은 남아선호 사상이 강한 가정에서 태어나 어머니로부터 심한 억압을 받으며 자랐습니다. 아버지의 수술비를 마련하기 위해, 그녀는 어쩔 수 없이 자신의 난자를 판매하는 광고를 믿고 전화하기로 결심합니다. 그러나 우연히 잘못 걸린 전화로 부유한 의사 시린과 연결됩니다. 시린은 린면를 보호하기 위해 그녀를 만나려 하지만, 오히려 그녀에게 첫눈에 반했습니다. 두 사람은 이렇게 특별한 관계를 시작하게 됩니다. 린면는 단순히 금전적인 거래라고 생각하며 시린의 감정을 계속 거부하지만, 시린은 린면을 위해 모든 것을 다하고 그녀를 도와주며 돌봅니다. 결국 시린은 린면를 가족의 어두운 굴레에서 끌어내고, 그녀가 자신의 꿈을 이룰 수 있도록 도와줍니다.\n이 이야기는 사랑, 희생, 그리고 새로운 시작에 관한 감동적인 이야기입니다.",
+    "cover": "https://p.idrama.video/group1/dc2b9863bf256e855a292e26ed06552f.jpg",
+    "total_episodes": 50,
+    "lang": "en"
+  },
+  "episodes": [
+    {
+      "ep": 1,
+      "url": "https://v-a.idrama.video/c8fb757968eea53f154185e741653ce4/9a62d6f1521b53c2b61bfbeb98fcb378.m3u8?ts=1787743848&secret=3f44564b6af73b36c4c307336076af11",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 2,
+      "url": "https://v-a.idrama.video/f3d764bdb5cf505d9695bdd98cacf624/584f84beffb0b6d084660df01434ff97.m3u8?ts=1787743850&secret=6b6dd26e69a3977f73fcd3f4f4fd2372",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 3,
+      "url": "https://v-a.idrama.video/e4b730cd67b0c3d27d1ede9dfae4e43e/35a35e5d26ad3198cda36d57c0628060.m3u8?ts=1787743853&secret=fcc14a44dc99e89b6dd1dfc165a22248",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 4,
+      "url": "https://v-a.idrama.video/8b9a22e47a25920e1216ac3400f5d0cc/287b31ded5dde32e1eee1a5f4d018db4.m3u8?ts=1787743855&secret=81902c63550c2cc8b6b9cd0c985111d6",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 5,
+      "url": "https://v-a.idrama.video/6f75e85ef26eed8ff52ab06775ae07b0/a033b2cd187d63654fd3a9b359c5ce03.m3u8?ts=1787743857&secret=e9c216013b849a8de1b8a916b6bf4148",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 6,
+      "url": "https://v-a.idrama.video/a163cb30ba7c62b3b0b895d0ca391eeb/93d9bcec9dfde1ef314187dec8b9b187.m3u8?ts=1787743859&secret=015ee02c7d191a7e4cc0926c056cd233",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 7,
+      "url": "https://v-a.idrama.video/567bd05b669a13618595412c9adfdb1e/bbc112bcda3cca299be353fffe18c60b.m3u8?ts=1787743862&secret=ba964ee007471608d5982dda7f65e688",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 8,
+      "url": "https://v-a.idrama.video/920f8b35ec8934db1af0a10960d13102/98783d354ce02a4fe0fb4ef6ed7a6c80.m3u8?ts=1787743864&secret=9cf4b86ee8a877d63311647a186c561b",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 9,
+      "url": "https://v-a.idrama.video/fb23fbd67fd2bf4f08958f51cd865fde/2ff7792f90e1d5796f1731e0d857ce3d.m3u8?ts=1787743867&secret=07d795528b457db2bbd155607b379c93",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 10,
+      "url": "https://v-a.idrama.video/e33444b827c4be06eafd6a157c0326ab/0dfaa7ba2d8139552aadecb359a41513.m3u8?ts=1787743869&secret=2a278b529eaf452e0e2f7bf86d585ce9",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 11,
+      "url": "https://v-a.idrama.video/c1540f9b1d8ca79306099aa7e131af85/1914143afb44850fdc09fb1f6681ff7f.m3u8?ts=1787743871&secret=43fb088226dfcbb980bcce559958ea7a",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 12,
+      "url": "https://v-a.idrama.video/dad060ea0e50532e930c2983e2d3a36f/762568a1b2caf22299b7597f22c36a08.m3u8?ts=1787749667&secret=2018ad9e4ce2d29c49f127126c3a624a&usr=v0024048679",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 13,
+      "url": "https://v-a.idrama.video/4078f190b8f495e0cd506bbc42c2bddc/cb88bf6b0f9299d6171c52f3a1cb18c1.m3u8?ts=1787743876&secret=28492350630c18e59b3d69d2766e8fca",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 14,
+      "url": "https://v-a.idrama.video/266a1a5744446e4d831d71a7d11f05a2/25fad612d5f33bca0e6516c66c72246b.m3u8?ts=1787749670&secret=c6d98cb71a58a3ffbb4a5fad0e96b0f3",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 15,
+      "url": "https://v-a.idrama.video/1f5b0cd1fa5cda22e8ae08e57f971829/9777358d3e917e0bcb2fb512769ad266.m3u8?ts=1787749672&secret=4be67d62ebde535ccee1c5295fc406db",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 16,
+      "url": "https://v-a.idrama.video/1436bc2c2211f53c4d67f758e359ca6a/199be4986ae41dad3ef780b1c030fc39.m3u8?ts=1787749674&secret=6fe96bbde612cc4e7f59ec8676872596",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 17,
+      "url": "https://v-a.idrama.video/5b1596b0e3881cd6acba0ac4da5cbd2a/943cc7e44dd76455a346e1d2b93e2c78.m3u8?ts=1787749676&secret=a6c6e0146d7184439079ec0456c49b84",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 18,
+      "url": "https://v-a.idrama.video/5c20d3b7d032786e372b5445ea4b94db/78c3bda4fd207d6e9ab449ceb7c968b9.m3u8?ts=1787743883&secret=1723a0abf6fdd5f6ef03467f9bdd1cca",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 19,
+      "url": "https://v-a.idrama.video/bfa579b84b53a5c10c2a01453b355a34/6c2bc8fd2514083c998bb3150cf1b5f2.m3u8?ts=1787743886&secret=b2050eed45b4877989da4774de409de2",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 20,
+      "url": "https://v-a.idrama.video/061d70575632b17d306c4d3a95e5c0a9/5870c84bad5adabecb17531a3f8856ed.m3u8?ts=1787743888&secret=abf8ee6f5ad41bfc5e38a33f18bc930a",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 21,
+      "url": "https://v-a.idrama.video/5cbe0b45b9171ee39beaddb7e2d5318e/fb26bdca3c344847b98d94a619e444d6.m3u8?ts=1787743890&secret=95df6a3d65b8c6f42a5f87c774e70575",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 22,
+      "url": "https://v-a.idrama.video/458dc37fdfb4b3da39cf6609da193410/1f236e76b9797acd167b0e827f0ade55.m3u8?ts=1787743892&secret=228dd26879344aca230bc8a87813b02e",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 23,
+      "url": "https://v-a.idrama.video/ecbe92bbbf84a6202e1d7ff378502201/a090b51c7f2069452803917d4852896e.m3u8?ts=1787743895&secret=5b357d9c8971348cdd4ad195a90887a0",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 24,
+      "url": "https://v-a.idrama.video/cde0c0715d02222b8209f4d3587450a0/606f6b87d88b3c3e14fe56ea22c9d9d7.m3u8?ts=1787743896&secret=44b2bc7cca641ef094b6244c91a2fc6b",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 25,
+      "url": "https://v-a.idrama.video/214055640d1d2a5e063589b9d10ab1d2/c711a01856473662d25f0c98c4d8a908.m3u8?ts=1787743899&secret=3c9ebbf8a5be0c3dbc8642cf0543af8d",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 26,
+      "url": "https://v-a.idrama.video/3cfa53c2db185b06adf3118aa2f9079c/d8e95951d830c27a689a959b2110095f.m3u8?ts=1787743901&secret=50f3de7df7fa94de105765904af6c967",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 27,
+      "url": "https://v-a.idrama.video/a7720585f57e8162b3da3cb8aa2291ee/693e769ec36fd37f5a552f4e51668098.m3u8?ts=1787743903&secret=fd530211ce7467ee1e9073010cec768a",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 28,
+      "url": "https://v-a.idrama.video/8e97ea405dfe5ca70093fa4ed6976ec9/2c6936c0cbf8ebb5a5fcebea577a86a9.m3u8?ts=1787743906&secret=62ee9039bb610d0db4d0a06e11340d3c",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 29,
+      "url": "https://v-a.idrama.video/6ffc17ced663d9b186e81339da6d5c4f/5bee1ddcd7f4b43d88f49b832b8fac77.m3u8?ts=1787743908&secret=0003c2b05ffc4db61f5ad3b0fbbf99a9",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 30,
+      "url": "https://v-a.idrama.video/068625028d9d7c0e7292c7a8ab91b3dd/ef41a0d2015774fced60c3b3b67f32c3.m3u8?ts=1787743910&secret=f0ba3007f48cc658369d9b29e06b4d46",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 31,
+      "url": "https://v-a.idrama.video/c00e2fcda91df9510b1ee0b18bc31044/94288b77518e89b9f5c8bdb473b7ef34.m3u8?ts=1787743913&secret=cc8895df7f054f53310698fbe49dac0a",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 32,
+      "url": "https://v-a.idrama.video/d3b441fecc4166b107c38d422ff397d4/9e7fd0dd1b628cd7e4379359ce7fde03.m3u8?ts=1787743915&secret=ab78e4a4ee6fb3943626ddad0ddec74e",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 33,
+      "url": "https://v-a.idrama.video/e87414e2297d7ac7b0f1d053835c151f/bd86acb66e7a2ba054ed21e530c6089d.m3u8?ts=1787743917&secret=67306f259b3a467222e77b6273d157b2",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 34,
+      "url": "https://v-a.idrama.video/40e152aeac67f1d49d0f6d7619c346af/009a15bde5d444d68c0517b8bbc016ed.m3u8?ts=1787743919&secret=20dafabbce407a67ff1c502716fa617f",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 35,
+      "url": "https://v-a.idrama.video/a13bf1335b5378c86cf7b205dfae391b/d49ed52f86a24af29be096df5a126e81.m3u8?ts=1787743922&secret=1e17805c759bbf75eb6fd35843a2d465",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 36,
+      "url": "https://v-a.idrama.video/5252fab82f243eafdff4633af7d171a2/1ed82f54ee19e96c33d76938d19787ee.m3u8?ts=1787743924&secret=175a5d0f9d44205569b78875cfc572b1",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 37,
+      "url": "https://v-a.idrama.video/2912da84ce8028a75dec43549a67cfc1/6caa282796a429020e0a627a0a0abb8b.m3u8?ts=1787743926&secret=2435e1cc910520a229a8326f84e1f6a3",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 38,
+      "url": "https://v-a.idrama.video/4215e5023cbc1299d37484d155aa5c08/4eb5519f3b2a6a4355ee3e6fdf3d40f3.m3u8?ts=1787743928&secret=3dda69f5170b480233cdff4beb455823",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 39,
+      "url": "https://v-a.idrama.video/dda5c998be5a6ed4b6ad6bb104dab76f/26175ebbd196a53e9228aebcd5b445ce.m3u8?ts=1787743931&secret=55f1ca5c7346bfccab31e3cb7209b6b5",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 40,
+      "url": "https://v-a.idrama.video/24a0f22eee69f45740707bf2c221a681/e5904bdde14ade44c2264cdb4695a8a2.m3u8?ts=1787743933&secret=2969d8f44a9378e6cab8ebcc76216adf",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 41,
+      "url": "https://v-a.idrama.video/38435bdca6258b379e285742c90d8244/0e00c9b640f40801b19becc2bb511e70.m3u8?ts=1787743935&secret=9a7428c45bbdf1eca84b26eb39029891",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 42,
+      "url": "https://v-a.idrama.video/e8cce2caf0e56d4013893d76c7351a06/89d2203cacc082a875ad07d47a7ce8d9.m3u8?ts=1787743937&secret=84e753d058925a34851df5bde791ba9e",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 43,
+      "url": "https://v-a.idrama.video/0434c739d3db671135987c0bfab2ee2e/2ec313720bddfb7bac97153f01c6c736.m3u8?ts=1787743941&secret=53e9270ba1e308143c7c7d8067be2fa2",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 44,
+      "url": "https://v-a.idrama.video/bad993384abdd1a6b61b8e4e142be1f0/81e603f1245d282aa690261a4c6680e7.m3u8?ts=1787743943&secret=67bcd83396847b9b51a0d22515f9dcec",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 45,
+      "url": "https://v-a.idrama.video/8b193c3a556e019194b2e748a65fa654/a0fbcd3bfaaf8e176b167d5bc5f7b346.m3u8?ts=1787743945&secret=d790ebac2b3c3747831cc88042c59e24",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 46,
+      "url": "https://v-a.idrama.video/1738bf4a6204974613d9f0d4baa415d6/8c3dc665e2b3764f18148267bd50849c.m3u8?ts=1787743947&secret=8cab2341ad246eceee1c8bc289535784",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 47,
+      "url": "https://v-a.idrama.video/bc590a2ab91f907b9a6dd770a0f81a06/6b0e727638342f7a6703d6face994230.m3u8?ts=1787743949&secret=3468c58a654d57d8ae3d1cfc5606842e",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 48,
+      "url": "https://v-a.idrama.video/2d66f447dae854befd89c668c2e20a04/9a20f91d08983567b189a3c7f667e484.m3u8?ts=1787743951&secret=f0be04eec051f903a6d1f89dc8398ae5",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 49,
+      "url": "https://v-a.idrama.video/5c265b76ebe9b66f13aabcb0ac45aa43/1110abe6e3c8599b9f2c7d2f66677798.m3u8?ts=1787749715&secret=853be90ae139876e38ce9aa60b8cb965",
+      "subs": [],
+      "ok": true,
+      "error": null
+    },
+    {
+      "ep": 50,
+      "url": "https://v-a.idrama.video/9f39ed35f83638aae207c029ba76612c/ac9e6b7ed01bd503eb50faa282d6e615.m3u8?ts=1787749718&secret=ce1896ed788e13f8e0b0a4efe20cb489",
+      "subs": [],
+      "ok": true,
+      "error": null
+    }
+  ]
+}

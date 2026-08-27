@@ -398,9 +398,9 @@ class ImportProcessor:
         self.downloader = downloader
         self.download_errors = []
 
-    def process_json_file(self, json_file):
+    def process_json_file(self, json_file, data_dir, done_dir, error_dir):
         """Process a single JSON file"""
-        logger.info(f"Processing: {json_file}")
+        logger.info(f"Processing: {json_file.name}")
         self.download_errors = []  # Reset errors for this file
 
         # Mark as processing
@@ -442,9 +442,11 @@ class ImportProcessor:
         if existing_film:
             logger.warning(f"Film {film_id} already exists (skipping to avoid duplicates)")
             try:
-                processing_file.rename(json_file.with_name(json_file.stem + '_done.json'))
-            except:
-                pass
+                done_file = done_dir / json_file.name
+                processing_file.rename(done_file)
+                logger.info(f"Moved to: idrama/done/{done_file.name}")
+            except Exception as e:
+                logger.error(f"Error moving file to done: {e}")
             return True
 
         # Download cover
@@ -503,21 +505,21 @@ class ImportProcessor:
             logger.error(f"❌ Download errors detected ({len(self.download_errors)} errors)")
             for err in self.download_errors:
                 logger.error(f"   - {err}")
-            return self._handle_error(film_id, processing_file)
+            return self._handle_error(film_id, processing_file, error_dir)
 
-        # Rename to done
-        done_file = processing_file.with_name(processing_file.stem.replace('_processing', '') + '_done.json')
+        # Move to done directory
         try:
+            done_file = done_dir / json_file.name
             processing_file.rename(done_file)
-            logger.info(f"Renamed to: {done_file}")
+            logger.info(f"✅ Moved to: idrama/done/{done_file.name}")
         except Exception as e:
-            logger.error(f"Error renaming file: {e}")
-            return self._handle_error(film_id, processing_file)
+            logger.error(f"Error moving file to done: {e}")
+            return self._handle_error(film_id, processing_file, error_dir)
 
         logger.info(f"✅ Successfully processed: {json_file.name} ({episodes_success} episodes)")
         return True
 
-    def _handle_error(self, film_id, processing_file):
+    def _handle_error(self, film_id, processing_file, error_dir):
         """Handle processing error: rollback database and files"""
         logger.error(f"🔄 Rolling back for film {film_id}...")
 
@@ -545,57 +547,68 @@ class ImportProcessor:
         except Exception as e:
             logger.warning(f"   ⚠ Error deleting video files: {e}")
 
-        # Rename to error
-        error_file = processing_file.with_name(processing_file.stem.replace('_processing', '') + '_error.json')
+        # Move to error directory
         try:
+            # Get original filename without _processing suffix
+            original_name = processing_file.stem.replace('_processing', '') + '.json'
+            error_file = error_dir / original_name
             processing_file.rename(error_file)
-            logger.error(f"   ✓ Renamed to: {error_file.name}")
+            logger.error(f"   ✓ Moved to: idrama/error/{error_file.name}")
         except Exception as e:
-            logger.error(f"   ⚠ Error renaming to error file: {e}")
+            logger.error(f"   ⚠ Error moving to error directory: {e}")
             try:
+                # Fallback: remove _processing suffix and keep in data dir
                 processing_file.rename(processing_file.with_name(processing_file.stem.replace('_processing', '') + '.json'))
             except:
                 pass
 
         return False
 
+    def _init_directories(self):
+        """Initialize data, done, and error directories"""
+        data_dir = JSON_DIR / 'data'
+        done_dir = JSON_DIR / 'done'
+        error_dir = JSON_DIR / 'error'
+
+        data_dir.mkdir(parents=True, exist_ok=True)
+        done_dir.mkdir(parents=True, exist_ok=True)
+        error_dir.mkdir(parents=True, exist_ok=True)
+
+        return data_dir, done_dir, error_dir
+
     def scan_and_process(self):
-        """Scan for unprocessed JSON files"""
+        """Scan for unprocessed JSON files in data directory"""
         logger.info("Scanning for JSON files...")
 
-        # Find all JSON files
-        json_files = list(JSON_DIR.glob('*.json'))
-        json_files = [f for f in json_files
-                     if not f.name.endswith('_done.json')
-                     and not f.name.endswith('_processing.json')]
+        # Initialize directories
+        data_dir, done_dir, error_dir = self._init_directories()
 
-        # Handle recovery files
-        processing_files = list(JSON_DIR.glob('*_processing.json'))
+        # Handle recovery files (_processing) in data directory
+        processing_files = list(data_dir.glob('*_processing.json'))
         if processing_files:
-            logger.info(f"Found {len(processing_files)} incomplete processing files")
+            logger.info(f"Found {len(processing_files)} incomplete processing files - recovering...")
             for pfile in processing_files:
+                # Remove _processing marker to retry
                 original_file = pfile.with_name(pfile.stem.replace('_processing', '') + '.json')
-                if original_file.exists():
-                    logger.warning(f"Recovering: {original_file.name}")
+                try:
                     pfile.unlink()
-                else:
-                    logger.info(f"Restoring: {pfile.name}")
-                    pfile.rename(original_file)
+                    logger.warning(f"Recovered: {original_file.name} - will retry")
+                except Exception as e:
+                    logger.error(f"Error recovering {pfile.name}: {e}")
 
-        json_files = list(JSON_DIR.glob('*.json'))
-        json_files = [f for f in json_files
-                     if not f.name.endswith('_done.json')
-                     and not f.name.endswith('_processing.json')]
+        # Find all JSON files in data directory
+        json_files = list(data_dir.glob('*.json'))
+        json_files = [f for f in json_files if not f.name.endswith('_processing.json')]
 
         if not json_files:
-            logger.info("No JSON files to process")
+            logger.info("No JSON files to process in idrama/data/")
             return
 
-        logger.info(f"Found {len(json_files)} JSON files to process")
+        logger.info(f"Found {len(json_files)} JSON files to process in idrama/data/")
 
         for json_file in json_files:
             try:
-                self.process_json_file(json_file)
+                self.process_json_file(json_file, data_dir, done_dir, error_dir)
             except Exception as e:
                 logger.error(f"Error processing {json_file}: {e}")
 
