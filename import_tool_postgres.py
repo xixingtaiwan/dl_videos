@@ -80,10 +80,17 @@ class FilmDatabase:
                     video_path TEXT,
                     video_path_source TEXT,
                     url TEXT,
+                    video_format TEXT DEFAULT 'unknown',
                     status TEXT DEFAULT 'pending',
                     downloaded_at TIMESTAMP,
                     UNIQUE(film_id, ep_number)
                 )
+            ''')
+
+            # Add video_format column if it doesn't exist (for existing tables)
+            cursor.execute('''
+                ALTER TABLE episodes
+                ADD COLUMN IF NOT EXISTS video_format TEXT DEFAULT 'unknown'
             ''')
 
             conn.commit()
@@ -150,7 +157,7 @@ class FilmDatabase:
             logger.error(f"Error getting film pk: {e}")
             return None
 
-    def insert_episode(self, film_pk, ep_number, video_path, video_path_source, url):
+    def insert_episode(self, film_pk, ep_number, video_path, video_path_source, url, video_format='unknown'):
         """Insert episode into database"""
         try:
             conn = self.get_connection()
@@ -158,15 +165,16 @@ class FilmDatabase:
 
             cursor.execute('''
                 INSERT INTO episodes
-                (film_id, ep_number, video_path, video_path_source, url, status, downloaded_at)
-                VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
+                (film_id, ep_number, video_path, video_path_source, url, video_format, status, downloaded_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
                 ON CONFLICT (film_id, ep_number) DO UPDATE SET
                     video_path = EXCLUDED.video_path,
                     video_path_source = EXCLUDED.video_path_source,
                     url = EXCLUDED.url,
+                    video_format = EXCLUDED.video_format,
                     status = 'completed',
                     downloaded_at = CURRENT_TIMESTAMP
-            ''', (film_pk, ep_number, video_path, video_path_source, url, 'completed'))
+            ''', (film_pk, ep_number, video_path, video_path_source, url, video_format, 'completed'))
             conn.commit()
             conn.close()
         except psycopg2.Error as e:
@@ -222,12 +230,34 @@ class VideoDownloader:
             return str(output_path)
         return None
 
-    def download_episode(self, url, film_id, ep_number, source):
-        """Download episode video (HLS M3U8 + segments)"""
+    def detect_video_format(self, url):
+        """Detect video format from URL"""
+        url_lower = url.lower()
+
+        if '.m3u8' in url_lower or 'hls' in url_lower:
+            return 'hls'
+        elif '.mpd' in url_lower or 'dash' in url_lower:
+            return 'dash'
+        elif '.mp4' in url_lower:
+            return 'mp4'
+        elif '.mkv' in url_lower:
+            return 'mkv'
+        elif '.webm' in url_lower:
+            return 'webm'
+        elif '.flv' in url_lower:
+            return 'flv'
+        elif '.mov' in url_lower:
+            return 'mov'
+        else:
+            # Default fallback - try to guess from URL structure
+            if url_lower.endswith('.ts') or '.ts?' in url_lower:
+                return 'hls'
+            return 'unknown'
+
+    def download_hls_episode(self, url, output_dir):
+        """Download HLS M3U8 playlist and all segments"""
         url_path = urlparse(url).path.strip('/')
         parts = url_path.split('/')
-        output_dir = self.download_dir / source / film_id / 'ep' / str(ep_number)
-        output_dir.mkdir(parents=True, exist_ok=True)
 
         if len(parts) >= 2:
             subdir = output_dir / parts[-2]
@@ -246,28 +276,121 @@ class VideoDownloader:
             with open(m3u8_path, 'r') as f:
                 m3u8_content = f.read()
 
-            # Extract segment URLs (lines starting with /)
             segments = [line.strip() for line in m3u8_content.split('\n')
                        if line.strip().startswith('/')]
 
             logger.info(f"Found {len(segments)} video segments in M3U8")
 
-            # Build base URL (domain only: https://v-a.idrama.video)
             parsed = urlparse(url)
             base_url = f"{parsed.scheme}://{parsed.netloc}"
 
-            # Download each segment
             for segment_path in segments:
-                # Segment path is absolute from domain: /hash1/hash2.ts?ts=...&secret=...
                 segment_url = base_url + segment_path
-                # Extract filename from segment URL (remove query params)
                 segment_file = segment_path.split('/')[-1].split('?')[0]
                 segment_out = subdir / segment_file
                 self.download_file(segment_url, segment_out)
         except Exception as e:
-            logger.warning(f"Error downloading segments: {e}")
+            logger.warning(f"Error downloading HLS segments: {e}")
 
         return str(m3u8_path)
+
+    def download_dash_episode(self, url, output_dir):
+        """Download DASH MPD manifest and all segments"""
+        try:
+            import xml.etree.ElementTree as ET
+        except ImportError:
+            logger.error("XML parsing not available for DASH")
+            return None
+
+        url_path = urlparse(url).path.strip('/')
+        parts = url_path.split('/')
+
+        subdir = output_dir / 'dash'
+        subdir.mkdir(parents=True, exist_ok=True)
+        mpd_filename = parts[-1] if parts else 'video.mpd'
+        mpd_path = subdir / mpd_filename
+
+        # Download MPD manifest
+        if not self.download_file(url, mpd_path):
+            return None
+
+        # Parse MPD and download segments
+        try:
+            tree = ET.parse(mpd_path)
+            root = tree.getroot()
+
+            # Extract segment URLs from MPD (simplified parsing)
+            segments = []
+            for elem in root.iter():
+                if 'media' in elem.tag.lower() or 'representation' in elem.tag.lower():
+                    for child in elem:
+                        if 'segmenturl' in child.tag.lower():
+                            media_attr = child.get('media')
+                            if media_attr:
+                                segments.append(media_attr)
+
+            logger.info(f"Found {len(segments)} video segments in DASH MPD")
+
+            parsed = urlparse(url)
+            base_url = f"{parsed.scheme}://{parsed.netloc}"
+            # Get base path from MPD URL
+            mpd_path_parts = urlparse(url).path.rsplit('/', 1)
+            base_path = mpd_path_parts[0] if len(mpd_path_parts) > 1 else ''
+
+            for segment in segments:
+                if not segment:
+                    continue
+
+                if segment.startswith('http'):
+                    segment_url = segment
+                elif segment.startswith('/'):
+                    segment_url = base_url + segment
+                else:
+                    segment_url = base_url + base_path + '/' + segment
+
+                segment_file = segment.split('/')[-1].split('?')[0]
+                segment_out = subdir / segment_file
+                self.download_file(segment_url, segment_out)
+        except Exception as e:
+            logger.warning(f"Error downloading DASH segments: {e}")
+
+        return str(mpd_path)
+
+    def download_direct_video(self, url, output_dir, format_type):
+        """Download direct video file (MP4, MKV, WebM, etc.)"""
+        url_path = urlparse(url).path.strip('/')
+
+        # Determine filename
+        filename = url_path.split('/')[-1].split('?')[0]
+        if not filename or '.' not in filename:
+            filename = f'video.{format_type}'
+
+        output_path = output_dir / filename
+
+        if self.download_file(url, output_path):
+            return str(output_path)
+        return None
+
+    def download_episode(self, url, film_id, ep_number, source):
+        """Download episode video in any supported format"""
+        output_dir = self.download_dir / source / film_id / 'ep' / str(ep_number)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Detect format
+        video_format = self.detect_video_format(url)
+        logger.info(f"Detected video format: {video_format} for episode {ep_number}")
+
+        # Route to appropriate handler
+        if video_format == 'hls':
+            return self.download_hls_episode(url, output_dir)
+        elif video_format == 'dash':
+            return self.download_dash_episode(url, output_dir)
+        elif video_format in ['mp4', 'mkv', 'webm', 'flv', 'mov']:
+            return self.download_direct_video(url, output_dir, video_format)
+        else:
+            # Fallback: try direct download
+            logger.info(f"Using fallback download for: {url}")
+            return self.download_direct_video(url, output_dir, 'mp4')
 
 class ImportProcessor:
     def __init__(self, db, downloader):
@@ -367,9 +490,10 @@ class ImportProcessor:
                 logger.warning(f"No URL for episode {ep_number}")
                 continue
 
+            video_format = self.downloader.detect_video_format(url)
             video_path = self.downloader.download_episode(url, film_id, ep_number, source)
             if video_path:
-                self.db.insert_episode(film_pk, ep_number, video_path, url, url)
+                self.db.insert_episode(film_pk, ep_number, video_path, url, url, video_format)
                 episodes_success += 1
             else:
                 self.download_errors.append(f"Episode {ep_number} download failed: {url}")
