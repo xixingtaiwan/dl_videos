@@ -51,7 +51,7 @@ winget install Python.Python.3.12
 
 2. **Cài đặt PostgreSQL**
    - Chạy installer
-   - Ghi nhớ **password** cho user `postgres`
+   - Ghi nhớ **password** cho user `postgres` --> Moonova
    - Đảm bảo port **5432** được sử dụng
    - Tích chọn **pgAdmin 4** (quản lý DB UI)
 
